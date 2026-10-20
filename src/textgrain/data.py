@@ -3,7 +3,7 @@
 from datasets import load_dataset
 from transformers import PreTrainedTokenizerBase
 
-INSTRUCTION = "Continue the following news article with about 300 words. Write only the continuation, in the same style.\n\n"
+INSTRUCTION = "Continue the following news article with about 300 words. Write only the continuation, in the same style, with no introduction.\n\n"
 
 
 def load_c4_prompts(tokenizer: PreTrainedTokenizerBase, n: int, prefix_tokens: int = 100, completion_tokens: int = 400) -> list[dict]:
