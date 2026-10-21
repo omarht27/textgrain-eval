@@ -23,3 +23,23 @@ def load_c4_prompts(tokenizer: PreTrainedTokenizerBase, n: int, prefix_tokens: i
 def continuation_message(prefix: str) -> str:
     """Takes the beginning of an article and returns the user message asking the model to continue it."""
     return INSTRUCTION + prefix
+
+
+SHOWCASE_QUESTIONS = [
+    "What is a text watermark?",
+    "Explain to a ten-year-old why the sky is blue.",
+    "Write a haiku about the sea.",
+    "Give three tips to learn a new language.",
+]
+DOLLY_CATEGORIES = {"open_qa", "general_qa", "brainstorming", "creative_writing"}
+
+
+def load_questions(n: int) -> list[str]:
+    """Returns n open questions: the showcase questions, then Dolly questions that need no context."""
+    questions = list(SHOWCASE_QUESTIONS)
+    for row in load_dataset("databricks/databricks-dolly-15k", split="train"):
+        if len(questions) >= n:
+            break
+        if row["category"] in DOLLY_CATEGORIES and not row["context"].strip() and len(row["instruction"]) < 200:
+            questions.append(row["instruction"].strip())
+    return questions[:n]

@@ -11,12 +11,20 @@ from textgrain.keys import context_window, keyed_draws, keyed_rng
 
 def scored_positions(tokens: list[int], window: int) -> Iterator[tuple[list[int], int]]:
     """Takes token ids and yields (context, token) at the first occurrence of each context."""
+    for t in scored_indices(tokens, window):
+        yield context_window(tokens, t, window), tokens[t]
+
+
+def scored_indices(tokens: list[int], window: int) -> list[int]:
+    """Takes token ids and returns the positions t scored by the detectors: the first occurrence of each context."""
     seen: set[tuple[int, ...]] = set()
-    for t, token in enumerate(tokens):
-        context = context_window(tokens, t, window)
-        if tuple(context) not in seen:
-            seen.add(tuple(context))
-            yield context, token
+    indices = []
+    for t in range(len(tokens)):
+        context = tuple(context_window(tokens, t, window))
+        if context not in seen:
+            seen.add(context)
+            indices.append(t)
+    return indices
 
 
 def gumbel_scores(tokens: list[int], key: bytes, window: int, vocab_size: int) -> np.ndarray:
