@@ -12,7 +12,7 @@ def gumbel_argmax(probs: np.ndarray, uniforms: np.ndarray) -> int:
         return int(np.argmax(np.log(uniforms) / probs))
 
 
-def gumbel_chooser(key: bytes, window: int, seed: int, mask_repeated: bool = True) -> TokenChooser:
+def gumbel_chooser(key: bytes, window: int, seed: int, mask_repeated: bool = True, min_context: int = 0) -> TokenChooser:
     """Takes the key, the context window length and a seed for the free generator and returns a Gumbel-max token chooser."""
     rng = np.random.default_rng(seed)
     seen: set[tuple[int, ...]] = set()
@@ -21,7 +21,7 @@ def gumbel_chooser(key: bytes, window: int, seed: int, mask_repeated: bool = Tru
         if not response:
             seen.clear()
         context = tuple(context_window(response, len(response), window))
-        if mask_repeated and context in seen:
+        if len(context) < min_context or (mask_repeated and context in seen):
             return sample(probs, rng)
         seen.add(context)
         return gumbel_argmax(probs, keyed_rng(key, list(context)).random(len(probs)))

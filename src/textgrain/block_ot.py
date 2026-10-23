@@ -15,9 +15,14 @@ def textgrain_chooser(
     beta: float,
     seed: int,
     mask_repeated: bool = True,
+    min_context: int = 0,
     log: list[tuple[float, float]] | None = None,
 ) -> TokenChooser:
-    """Takes the key, the watermark parameters and a seed for the free generator and returns a textGrain token chooser; if given, log receives (H(P), removed fraction) at each watermarked position."""
+    """Takes the key, the watermark parameters and a seed for the free generator and returns a textGrain token chooser.
+
+    Positions whose context has fewer than min_context tokens, and repeated contexts if mask_repeated, are sampled from P without watermark.
+    If given, log receives (H(P), removed fraction) at each watermarked position.
+    """
     rng = np.random.default_rng(seed)
     seen: set[tuple[int, ...]] = set()
 
@@ -25,7 +30,7 @@ def textgrain_chooser(
         if not response:
             seen.clear()
         context = tuple(context_window(response, len(response), window))
-        if mask_repeated and context in seen:
+        if len(context) < min_context or (mask_repeated and context in seen):
             return sample(probs, rng)
         seen.add(context)
 

@@ -19,10 +19,10 @@ def make_chooser(args: argparse.Namespace, key: bytes, seed: int, log: list) -> 
     if args.method == "none":
         return sampler(seed)
     if args.method == "gumbel":
-        return gumbel_chooser(key, args.window, seed)
+        return gumbel_chooser(key, args.window, seed, min_context=args.min_context)
     if args.method == "greenlist":
-        return greenlist_chooser(key, args.window, args.gamma, args.delta, seed)
-    return textgrain_chooser(key, args.window, args.blocks, args.columns, args.beta, seed, log=log)
+        return greenlist_chooser(key, args.window, args.gamma, args.delta, seed, min_context=args.min_context)
+    return textgrain_chooser(key, args.window, args.blocks, args.columns, args.beta, seed, min_context=args.min_context, log=log)
 
 
 def main() -> None:
@@ -33,6 +33,7 @@ def main() -> None:
     parser.add_argument("--blocks", type=int, default=4)
     parser.add_argument("--columns", type=int, default=4)
     parser.add_argument("--window", type=int, default=2)
+    parser.add_argument("--min-context", type=int, default=0, help="do not watermark positions whose context has fewer tokens")
     parser.add_argument("--gamma", type=float, default=0.25)
     parser.add_argument("--delta", type=float, default=2.0)
     parser.add_argument("--prompts", choices=["c4", "questions"], default="c4")

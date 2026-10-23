@@ -32,3 +32,11 @@ def test_zero_budget_leaves_no_signal() -> None:
         tokens = generate_synthetic(textgrain_chooser(key, 2, 4, 4, beta=0.0, seed=seed), 100, seed=seed)
         pvalues.append(gamma_pvalue(textgrain_scores(tokens, key, 2, VOCAB_SIZE, 4, 4)))
     assert min(pvalues) > 1e-4
+
+
+def test_min_context_positions_are_neither_watermarked_nor_scored() -> None:
+    key = new_key()
+    tokens = generate_synthetic(textgrain_chooser(key, 2, 4, 4, beta=0.25, seed=0, min_context=2), 100, seed=1)
+    scores = textgrain_scores(tokens, key, 2, VOCAB_SIZE, 4, 4, min_context=2)
+    assert len(scores) <= len(tokens) - 2
+    assert gamma_pvalue(scores) < 1e-4

@@ -3,6 +3,7 @@
 import argparse
 import json
 import re
+from functools import lru_cache
 from pathlib import Path
 
 import nltk
@@ -54,18 +55,25 @@ def round_trip(texts: list[str]) -> list[str]:
     return out
 
 
-@torch.no_grad()
-def paraphrase(texts: list[str], name: str, batch_size: int = 16) -> list[str]:
-    """Takes texts and an instruction model name and returns the model's paraphrases (greedy decoding)."""
+@lru_cache(maxsize=1)
+def load_paraphraser(name: str) -> tuple[AutoTokenizer, AutoModelForCausalLM]:
+    """Takes an instruction model name and returns its tokenizer (left padding) and the model on the GPU, loaded once."""
     tokenizer = AutoTokenizer.from_pretrained(name, padding_side="left")
     tokenizer.pad_token = tokenizer.pad_token or tokenizer.eos_token
-    model = AutoModelForCausalLM.from_pretrained(name, torch_dtype=torch.float16).to("cuda").eval()
+    model = AutoModelForCausalLM.from_pretrained(name, dtype=torch.float16).to("cuda").eval()
+    return tokenizer, model
+
+
+@torch.no_grad()
+def paraphrase(texts: list[str], name: str, batch_size: int = 4) -> list[str]:
+    """Takes texts and an instruction model name and returns the model's paraphrases (greedy decoding)."""
+    tokenizer, model = load_paraphraser(name)
     out = []
     for first in range(0, len(texts), batch_size):
         messages = [[{"role": "user", "content": PARAPHRASE_INSTRUCTION + t}] for t in texts[first : first + batch_size]]
         prompts = [tokenizer.apply_chat_template(m, tokenize=False, add_generation_prompt=True) for m in messages]
         batch = tokenizer(prompts, return_tensors="pt", padding=True, add_special_tokens=False).to("cuda")
-        generated = model.generate(**batch, max_new_tokens=700, do_sample=False)
+        generated = model.generate(**batch, max_new_tokens=600, do_sample=False)
         out += tokenizer.batch_decode(generated[:, batch.input_ids.shape[1] :], skip_special_tokens=True)
         print(f"  paraphrased {len(out)}/{len(texts)}", flush=True)
     return out
@@ -87,7 +95,9 @@ def main() -> None:
         rng = np.random.default_rng(0)
         attacked = {f"synonyms_{f}": [substitute_synonyms(t, f, rng) for t in texts] for f in (0.1, 0.2, 0.3)}
         attacked["translation"] = round_trip(texts)
+        torch.cuda.empty_cache()
         attacked["paraphrase"] = paraphrase(texts, args.paraphraser)
+        torch.cuda.empty_cache()
         out = [
             {
                 "index": r["index"],
