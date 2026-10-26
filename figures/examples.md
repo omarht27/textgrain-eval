@@ -70,6 +70,14 @@
 > A text watermark is a method used to protect or authenticate the origin of textual content, such as documents, reports, or other written material. Text watermarks can be applied in various ways to obscure or blend with the base text, and are designed to prevent unauthorized copying, reusing, or distribution of the original work. This can be achieved using various techniques, such as embedding invisible text into the image or incorporating invisible patterns and symbols into the document. They allow creators to add assurance to their work which helps in preventing any illicit use or copycatting of their work by unauthorized third parties.
 > Typically, watermarking is used in the publishing industry for protecting the intellectual property of creators. However, it's utilized in a broader scope too, for privacy
 
+**textGrain B=m=8, beta=0.25, unmarked start**
+
+> A text watermark is a typewritten text inserted into the original document such that it becomes part of its physical structure. It can be a redacted element, a printed marginalia or annotation, which allows the content provider to retain ownership over material presented within the watermark.
+> 
+> Once the text has been imprinted, it is almost impossible to remove without completely destroying the content. As such, text watermarks can prevent the theft of copyrighted works or protecting brand awareness.
+
+> A text watermark is a text message that is incorporated into a document, such as a picture, in order to prevent it from being easily copied. When someone takes a photo or scanning of a document that has a watermark, the watermark text is very hard to decipher. If you decipher the watermark text, it could indicate that you have access to or information about the original document. Therefore, users often set watermarks on sensitive documents.
+
 ## Explain to a ten-year-old why the sky is blue.
 
 **no watermark**
@@ -137,6 +145,20 @@
 > 
 > You know that sun comes up in the morning and it gives us light? That's not the light you're thinking about though. The light that gives us sunlight during the day is actually shorter and more orange and yellow and green. But when the sun gets very, very low in the sky at night or just before sunrise, it's cooler and it makes our world turn dark and cool. It's
 
+**textGrain B=m=8, beta=0.25, unmarked start**
+
+> Sure! Let's explore why the sky looks blue from the ground, like a little science experiment.
+> 
+> Imagine the sky is like a big blanket spread out in the sky, filled with tiny bits of bright blue. When sunlight hits the blue bits, they scatter the color all around us. The farther you look into the sky, the more of these tiny blue bits you see. That's why it looks blue to your eyes!
+> 
+> But what if you saw the whole sky at once? Wouldn't it look like it's the same color everywhere? That's because of something called "Rayleigh scattering." Maybe you can think of it like a big cloud of dust that the sun's light dances through. When you look up at the sky, the dust or
+
+> The sky appears blue because it's the angle of sunlight that is hitting the Earth's atmosphere. 
+> When sunlight hits the Earth, it's not all at once. Instead, it spreads out in all directions. This is why we see the sky as a color and not a solid hue. 
+> However, when sunlight passes through the Earth's atmosphere, it gets bent, or refracted, by the air molecules. The angle at which this happens is the same as the angle of our eyes looking at the sky. 
+> So, when we look up at the sky, the light has to penetrate through a layer of atmosphere that bends it at the same angle as our eyes are looking. This is why the sky appears blue. 
+> Additionally, the blue
+
 ## Write a haiku about the sea.
 
 **no watermark**
@@ -198,6 +220,16 @@
 > Waves crash,
 >  Milky way of blue,
 > Sea whispers, deep.
+
+**textGrain B=m=8, beta=0.25, unmarked start**
+
+> Waves crash,
+> 大海漫漫无际的胸膛，
+> 潮起潮落，永恒的舞。
+
+> Wave upon wave,
+> Blue sky meets deep waters,
+> Seas weep without tear.
 
 ## Give three tips to learn a new language.
 
@@ -291,3 +323,41 @@
 > 2. Practice speaking: Speaking is the most important aspect of language learning. Try to have conversations with people who speak the language you are learning. Join a language exchange group or find a language partner on online platforms. The more you practice speaking, the better you will become.
 > 
 > 3. Use language learning
+
+**textGrain B=m=8, beta=0.25, unmarked start**
+
+> 1. Practice consistently: Consistency is key when learning a new language. Set aside dedicated time each day to practice. You could use flashcards, language apps, or even watch movies or listen to podcasts in the language you are learning.
+>   2. Surround yourself in the language: Surrounding yourself in the language you are learning is an excellent way to accelerate your progress. Practice listening to native speakers, reading books or articles in the language, and using the language in your conversations. You can also try taking trips to places where the language is spoken and immerse yourself in the language.
+>   3. Simplicity is key: It's important to note that language learning is a gradual process that requires patience and consistency. Avoid overbur
+
+> Learning a new language can be challenging, but with persistence and proper strategies, it's definitely achievable. Here are three tips to help you get started:
+> 
+> 1. ** immerse yourself in the language**: The more you interact with the language, the better you will become. This can be through watching TV and movies in the language, listening to songs or podcasts, or even conversing with native speakers if possible. Interactive apps that translate text and offer exercises can also be very useful.
+> 
+> 2. ** practice regularly**: Like any skill, language proficiency requires consistent practice. Set aside time each day to study and practice, even if it's just for a few minutes. Consistency will help you build fluency gradually. Use language learning apps, built-in features
+
+## Attacks on one Gumbel-max text
+
+**original**
+
+> solution for high-performance computing. The company is expected to provide more details about the cluster during its Current TV 2023 conference, which is taking place this week. This latest cluster feature comes as IBM continues to expand its offerings in the hybrid work environment, which requires scalability and flexibility for both remote workers and those who prefer physical offices. By combining its Opteron-based 325 server with storage and management solutions, IBM is creating a framework that caters to organizations that need to handle a vast amount of data and applications, while pres
+
+**synonyms_0.1**
+
+> solution for high-performance computing. The company is expected to provide more inside information about the cluster during its Current TV 2023 conference, which is taking place this week. This latest cluster feature comes as IBM continues to expand its offerings in the hybrid work environment, which requires scalability and flexibility for both remote workers and those who prefer physical offices. By combining its Opteron-based 325 server with computer memory and management solutions, IBM is creating a framework that caters to organizations that need to handle a vast amount of data and appli
+
+**synonyms_0.2**
+
+> solution for high-performance computing. The company is anticipate to provide Sir Thomas More particular nigh the flock during its current TV 2023 conference, which is taking berth this week. This latest cluster feature number as IBM continues to expand its oblation in the hybrid knead environment, which want scalability and tractability for both outback workers and those who prefer physical offices. By unite its Opteron-based 325 server with storehouse and direction solutions, IBM is creating a theoretical account that provide to organizations that postulate to handle a Brobdingnagian amount 
+
+**synonyms_0.3**
+
+> resolution for high-performance computing. The company is expect to supply more detail about the bundle during its electric current TV 2023 conference, which is taking office this week. This up-to-the-minute constellate feature comes as IBM continues to expand its oblation in the crossbreed make environment, which expect scalability and flexibleness for both remote proletarian and those who opt forcible offices. By flux its Opteron-based 325 host with reposition and direction solutions, IBM is creating a framework that caters to organizations that motive to handle a huge amount of datum and ap
+
+**translation**
+
+> solution for high performance computing. The company is expected to provide more details on the cluster at its current 2023 television conference, which will take place this week. This latest cluster feature comes as IBM continues to expand its offerings in the hybrid work environment, which requires scalability and flexibility for remote workers and those who prefer physical offices. By combining its Opteron 325 server with storage and management solutions, IBM creates a framework for organizations that need to manage a large amount of data and applications, while maintaining data security an
+
+**paraphrase**
+
+> IBM is set to reveal more about its high-performance computing cluster at the Current TV 2023 event this week. The company's latest addition to its hybrid work environment solutions, which demand scalability and adaptability for both remote and on-site employees, combines its Opteron-based 325 server with storage and management systems. This creates a robust framework for organizations dealing with large volumes of data and applications, ensuring data security and integrity.  Targeting CIOs and top-level executives, IBM's 325 server aims to significantly enhance productivity and efficiency. Th

@@ -27,8 +27,9 @@ CONFIGS = {
     "textgrain_B8_b0.75": "textGrain B=m=8, beta=0.75",
     "textgrain_B8_b0.25_L1": "textGrain B=m=8, beta=0.25, L=1",
     "textgrain_B8_b0.25_L4": "textGrain B=m=8, beta=0.25, L=4",
+    "textgrain_B8_b0.25_start": "textGrain B=m=8, beta=0.25, unmarked start",
 }
-DIVERSITY = ["none", "gumbel", "greenlist_d2", "textgrain_B4_b0.25", "textgrain_B8_b0.25", "textgrain_B8_b0.5"]
+DIVERSITY = ["none", "gumbel", "greenlist_d2", "textgrain_B4_b0.25", "textgrain_B8_b0.25", "textgrain_B8_b0.5", "textgrain_B8_b0.25_start"]
 LABELS = {"none": "no watermark", **CONFIGS}
 
 
@@ -230,16 +231,21 @@ def main() -> None:
         for name in attacked:
             print(f"{CONFIGS[name]:36}" + "  ".join(f"{a}: {r:.2f}" for a, r in robustness(name).items()))
 
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4.5), sharey=True)
-    for ax, kind in zip(axes, ["all", "filtered"]):
-        for name, row in table.items():
-            ax.plot(LENGTHS, row[kind], marker="o", label=CONFIGS[name])
+    panels = {
+        "methods": ["gumbel", "greenlist_d2", "textgrain_B4_b0.25", "textgrain_B8_b0.25"],
+        "textGrain settings": ["textgrain_B2_b0.25", "textgrain_B4_b0.1", "textgrain_B4_b0.25", "textgrain_B8_b0.25", "textgrain_B8_b0.5", "textgrain_B8_b0.25_L1"],
+    }
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4), sharey=True)
+    for ax, (title, names) in zip(axes, panels.items()):
+        for name in names:
+            if name in table:
+                ax.plot(LENGTHS, table[name]["all"], marker="o", label=CONFIGS[name])
         ax.set_xscale("log")
         ax.set_xticks(LENGTHS, [str(n) for n in LENGTHS])
         ax.set_xlabel("tokens read")
-        ax.set_title("all texts" if kind == "all" else "texts not past their natural end")
+        ax.set_title(title)
+        ax.legend(fontsize=8)
     axes[0].set_ylabel(f"detection rate (alpha = {ALPHA})")
-    axes[1].legend(fontsize=7)
     fig.tight_layout()
     fig.savefig(FIGURES / "power_vs_length.png", dpi=150)
     plt.close(fig)
@@ -258,13 +264,14 @@ def main() -> None:
     plt.close(fig)
 
     if div:
-        fig, ax = plt.subplots(figsize=(6, 4.5))
+        fig, ax = plt.subplots(figsize=(7, 4.5))
         for name, d in div.items():
             power = table[name]["all"][LENGTHS.index(50)] if name in table else 0.0
-            ax.scatter(1 - d["self_bleu"], power, s=60)
-            ax.annotate(LABELS[name], (1 - d["self_bleu"], power), fontsize=8, xytext=(5, 5), textcoords="offset points")
-        ax.set_xlabel("diversity of answers to the same question (1 - Self-BLEU)")
+            ax.scatter(1 - d["self_bleu"], power, s=70, label=LABELS[name])
+        ax.set_xlim(0, 1)
+        ax.set_xlabel("diversity of 10 answers to the same question (1 - Self-BLEU)")
         ax.set_ylabel(f"detection rate at 50 tokens (alpha = {ALPHA})")
+        ax.legend(fontsize=8, loc="lower left")
         fig.tight_layout()
         fig.savefig(FIGURES / "power_vs_diversity.png", dpi=150)
         plt.close(fig)

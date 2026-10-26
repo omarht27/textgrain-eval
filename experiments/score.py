@@ -51,17 +51,20 @@ def score_record(record: dict, key: bytes, negatives: list[str]) -> dict:
     return out
 
 
-def score_attack_file(path: Path, key: bytes) -> None:
+def score_attacked_record(record: dict, detector: str, key: bytes, window: int) -> dict:
+    """Takes the modified versions of one watermarked text and returns their scores under the original detector."""
+    scores = {attack: {"t": scored_indices(tokens, window), "y": score(tokens, detector, key, window)} for attack, tokens in record["ids"].items()}
+    return {"index": record["index"], "detector": detector, "scores": scores}
+
+
+def score_attack_file(path: Path, key: bytes, workers: int) -> None:
     """Takes an attacks file (modified versions of watermarked texts) and saves the score of every modified version under the original detector."""
     source = path.with_name(path.name.replace(".attacks.json", ".jsonl"))
     settings = json.loads(source.open().readline())["settings"]
     (detector,) = detector_names(settings)
-    out = []
-    for record in json.loads(path.read_text()):
-        scores = {}
-        for attack, tokens in record["ids"].items():
-            scores[attack] = {"t": scored_indices(tokens, settings["window"]), "y": score(tokens, detector, key, settings["window"])}
-        out.append({"index": record["index"], "detector": detector, "scores": scores})
+    records = json.loads(path.read_text())
+    with Pool(workers) as pool:
+        out = pool.map(partial(score_attacked_record, detector=detector, key=key, window=settings["window"]), records)
     path.with_name(path.name.replace(".json", ".scores.json")).write_text(json.dumps(out))
     print(f"{path.name}: {len(out)} attacked texts scored", flush=True)
 
@@ -81,7 +84,7 @@ def main() -> None:
         if out_path.exists():
             continue
         if path.name.endswith(".attacks.json"):
-            score_attack_file(path, key)
+            score_attack_file(path, key, args.workers)
             continue
         records = [json.loads(line) for line in path.open()]
         human = negatives if records[0]["settings"]["method"] == "none" else []
